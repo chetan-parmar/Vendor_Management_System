@@ -2,12 +2,15 @@
 
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 
 from .models import PurchaseOrder, Vendor
 from .serializers import VendorPerformanceSerializer, VendorSerializer
+
 
 class VendorListCreateView(ListCreateAPIView):
     """
@@ -19,6 +22,8 @@ class VendorListCreateView(ListCreateAPIView):
         queryset (QuerySet): The set of Vendor instances to be displayed or modified.
         serializer_class (Serializer): The serializer class for Vendor instances.
     """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
 
@@ -32,6 +37,8 @@ class VendorDetailView(RetrieveUpdateDestroyAPIView):
         queryset (QuerySet): The set of Vendor instances to be retrieved, updated, or deleted.
         serializer_class (Serializer): The serializer class for Vendor instances.
     """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
 
@@ -49,6 +56,8 @@ class VendorPerformanceView(APIView):
     Attributes:
         None
     """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, vendor_id):
         vendor = Vendor.objects.get(pk=vendor_id)
         serializer = VendorPerformanceSerializer(vendor)
@@ -68,6 +77,8 @@ class AcknowledgePurchaseOrderView(APIView):
     Attributes:
         None
     """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request, po_id):
         try:
             purchase_order = PurchaseOrder.objects.get(pk=po_id)
